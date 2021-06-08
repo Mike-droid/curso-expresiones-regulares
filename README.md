@@ -128,3 +128,63 @@ Estos dos caracteres indican en qué posición de la línea debe hacerse la bús
 `^(\w+,){2,10}\w+$` También sirve para archivos CSV => Empieza con caracter alfanumérico que aparece 1 o más veces y después tiene una coma, de longitud 2 hasta 10, que termina con caracter alfanumérico que aparace 1 o más veces.
 
 [CheatSheet de expresiones regulares](http://w3.unpocodetodo.info/utiles/regex.php)
+
+## Uso práctico de expresiones regulares
+
+### Logs
+
+Las expresiones regulares son bastante usadas en logs. Por ejemplo:
+
+- [LOG ENTRY] [ERROR] The system is beign hacked
+- [LOG ENTRY] [WARN] The system may be down
+- [LOG ENTRY] [LOG] Everything is OK
+
+Podemos usar: `^\[LOG.*\[LOG\].*$` para encontrar todos los logs, o `^\[LOG.*\[WARN\].*$` para encontrar todos los warnings o también `^\[LOG.*\[ERROR\].*$` para encontrar todos los errores.
+
+Otro ejemplo:
+
+- [LOG ENTRY] [LOG] [user:@beco] Logged in
+- [LOG ENTRY] [LOG] [user:@beco] Clicked here
+- [LOG ENTRY] [LOG] [user:@mike] Rated the app
+- [LOG ENTRY] [LOG] [user:@beco] Logged out
+- [LOG ENTRY] [LOG] [user:@celismx] Logged out
+
+`^\[LOG.*\[LOG\].*user:@\w+?\] .*$` -> Podemos encontrar a cualquier log que tenga cualquier usuario, podemos poder un usuario específico con `user:@beco\]`.
+
+[Página de logs para practicar](https://pastebin.com/ptDsJ6tR)
+
+Reto: Buscar cosas en común en los logs y encontrarlas con expresiones regulares.
+
+### Teléfonos
+
+`^\+?\d+[#pe]?\d*$` -> "Quiero una línea que empiece con símbolo de más o sin símbolo de más, seguida por uno o más dígitos y este a su vez puede seguir por cuales quiera de los caracteres que estén dentro de la clase (los '[]'), estos caracteres pueden o no existir, a continuación, puede o puede no haber dígitos.
+
+### URLs
+
+`https?:\/\/[\w\-\.]+\.\w{2,5}\/?\S*` => Ya podemos traer enlaces de internet. Empieza con http, puede o no tener la 's', tiene '://' y después palabras, guiones  o puntos 1 o más veces, luego palabras entre 2 y 5 dígitos de longitud, puede o no seguir con una '/', y terminar con algo que no sea un espacio.
+
+### Mails
+
+- mails: `[\w\._]{5,30}\+?[\w]{0,10}@[\w\.\-]{3,}\.\w{2,5}`
+- usuarios: `[\w\._]{5,30}\+?[\w]{0,10}@` -> Tenemos una clase que me permita: Cualquier caracter que sea palabra, que tenga entre 5 y 30 caracteres, posteriormente tener un símbolo de '+' (opcional) y que esta sea compuesta entre 0 y 10, el '@' es obligatorio
+
+[TLD - top level domain](https://es.wikipedia.org/wiki/Dominio_de_nivel_superior)
+
+### Localizaciones
+
+- -99.205646,19.429707,2275.10
+- -99.205581, 19.429652,2275.10
+- -99.204654,19.428952,2275.58
+
+- Coordenadas 1: `\-?\d{1,3}\.\d{1,6},\s?\-?\d{1,3}\.\d{1,6}.*$`
+
+- -99 12' 34.08"W, 19 34' 56.98"N
+-34 54' 32.00"E, -3 21' 67.00"S
+
+- Coordenadas 2: `^\-?\d{1,3}\s\d{1,2}'\s\d{1,2}\.\d{2,2}"[WE],\s?\-?\d{1,3}\s\d{1,2}'\s\d{1,2}\.\d{2,2}"[NS]$`
+
+### Reto: Nombre(s)
+
+Crear una expresión regular para saber si algo es un nombre.
+
+Solución: `^([A-Ú][a-ú]+\s?){1,5}$`
