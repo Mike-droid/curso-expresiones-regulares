@@ -188,3 +188,15 @@ Reto: Buscar cosas en común en los logs y encontrarlas con expresiones regulare
 Crear una expresión regular para saber si algo es un nombre.
 
 Solución: `^([A-Ú][a-ú]+\s?){1,5}$`
+
+## Usos avanzados en Expresiones Regulares
+
+### Búsqueda y reemplazo
+
+[Títulos de películas para practicar regex](https://github.com/gingsmith/moviedemo/blob/master/movies.dat)
+
+Las expresiones regulares son una excelente navaja suiza, pero NO solucionan todos tus problemas.
+
+- `()` -> Sirven para agrupar.
+
+Para el archivo de movies.txt: `^\d+::([\w\s:,\(\)'\.\-&!\/]+)\s\((\d+)\)::.*$` -> Empieza con un número que puede estar una o más veces, sigue con "::", tenemos el primer grupo, corresponde a palabras con espacios y `:,()'-&!/` una o más veces, luego un espacio, tenemos el segundo grupo que tiene un dígito que debe estar una o más veces, luego "::" y al final lo que sea.
