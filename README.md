@@ -200,3 +200,125 @@ Las expresiones regulares son una excelente navaja suiza, pero NO solucionan tod
 - `()` -> Sirven para agrupar.
 
 Para el archivo de movies.txt: `^\d+::([\w\s:,\(\)'\.\-&!\/]+)\s\((\d+)\)::.*$` -> Empieza con un número que puede estar una o más veces, sigue con "::", tenemos el primer grupo, corresponde a palabras con espacios y `:,()'-&!/` una o más veces, luego un espacio, tenemos el segundo grupo que tiene un dígito que debe estar una o más veces, luego "::" y al final lo que sea.
+
+## Expresiones regulares en lenguajes de programación
+
+### Uso de REGEX para descomponer querys GET
+
+Para obtener los queries de las urls: `[\?&](\w+)=([^&\n]+)` y podemos descomponerlas con: `\n   $1 => $2`
+
+### Perl
+
+(Estamos usando el archivo results.csv)
+
+Todas las expresiones regulares van entre dos diagonales `/miExpresionRegular/`
+
+Ejemplos:
+
+- Cada partido que se hizo en febrero: `^[\d]{4,4}\-02-.*$`
+- Cada vez que ganó el visitante: `^[\d]{4,4}.*?,(.*?),(.*?),(\d+),(\d+),.*$` -> lo podemos imprimir en Perl como:
+
+```perl
+if(m/^[\d]{4,4}.*?,(.*?),(.*?),(\d+),(\d+),.*$/) {
+  if ($4 > $3) {
+    printf("%s (%d) - (%d) %s\n", $1, $3, $4, $2);
+      # $1 es el equipo local
+      # $2 es el equipo visitante
+      # $3 es el marcador del equipo local
+      # $4 es el marcador del equipo visitante
+  }
+  $match++;
+}
+```
+
+- Lo mismo pero ahora añadimos el año del partido: `^([\d]{4,4})\-.*?,(.*?),(.*?),(\d+),(\d+),.*$` -> Lo mostramos así:
+
+```perl
+if(m/^([\d]{4,4})\-.*?,(.*?),(.*?),(\d+),(\d+),.*$/) {
+    if ($5 > $4) {
+      printf("%s: %s (%d) - (%d) %s\n", $1, $2, $4, $5, $3);
+      # $1 es la fecha
+      # $2 es el equipo local
+      # $3 es el equipo visitante
+      # $4 es el marcador del equipo local
+      # $5 es el marcador del equipo visitante
+    }
+    $match++;
+  }
+```
+
+### PHP
+
+Las expresiones regulares en PHP van entre comillas simples:
+
+```php
+if(preg_match(
+    '/^2018\-01\-(\d\d),.*$/',
+    $line,
+    $m
+  )) {
+    print_r($m);
+    $match++;
+  }
+```
+
+### Utilizando PHP en la práctica
+
+> Entender una expresión regular a la primera es un súperpoder que nadie tiene.
+
+#### Banderas
+
+Las expresiones regulares pueden tener banderas que afectan la búsqueda, éstas deberán de estar hasta el final de la línea.
+
+[Listado de banderas en JS](https://javascript.info/regexp-introduction#flags)
+
+`i`
+Con este indicador, la búsqueda no distingue entre mayúsculas y minúsculas: no hay diferencia entre A y a
+`g`
+Con esta marca, la búsqueda busca todas las coincidencias, sin ella, solo se devuelve la primera coincidencia.
+`m`
+Modo multilínea
+`s`
+Habilita el modo “dotall”, que permite un punto. para que coincida con el carácter de nueva línea \ n
+`u`
+Permite el soporte completo de Unicode. La bandera permite el procesamiento correcto de pares sustitutos.
+`y`
+Modo “adhesivo”: búsqueda en la posición exacta del texto
+
+### Python
+
+```python
+pattern = re.compile(r'^([\d]{4,4})\-\d\d-\d\d,(.+),(.+),(\d+),(\d+),.*$')
+```
+
+### Java
+
+```java
+Pattern pat = Pattern.compile("^2011\\-.*[zk].*$"); //Debemos escapar el escape para las regex en Java
+```
+
+### JavaScript
+
+```javascript
+function validate(str) {
+  if (str.match(/^[^@_]+@[\w\.]{2,}\.[\w]{2,5}$/i)) {
+    //* Validando un email con una expresión regular
+    document.getElementById("boton").disabled = false
+    document.getElementById("email").style.backgroundColor = "green"
+  } else {
+    document.getElementById("boton").disabled = true
+    document.getElementById("email").style.backgroundColor = "red"
+  }
+  console.log(str)
+}
+```
+
+### grep y find desde consola
+
+grep nos ayuda a buscar dentro de archivos, textos muy puntuales. Es una versión muy reducida de las regex.
+
+Ejemplo:
+
+`cat results.csv | grep 'expresionRegular'` -> `cat results.csv | grep TRUE$`
+
+Podemos incluso juntar varios grep: `cat results.csv| grep Brazil | grep Uruguay | grep ^1952` y tendremos varios resultados de Brazil y Uruguay en 1950
