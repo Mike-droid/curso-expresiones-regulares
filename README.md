@@ -313,6 +313,8 @@ function validate(str) {
 }
 ```
 
+rasdasd
+masdasd
 ### grep y find desde consola
 
 grep nos ayuda a buscar dentro de archivos, textos muy puntuales. Es una versión muy reducida de las regex.
@@ -322,3 +324,4 @@ Ejemplo:
 `cat results.csv | grep 'expresionRegular'` -> `cat results.csv | grep TRUE$`
 
 Podemos incluso juntar varios grep: `cat results.csv| grep Brazil | grep Uruguay | grep ^1952` y tendremos varios resultados de Brazil y Uruguay en 1950
+
